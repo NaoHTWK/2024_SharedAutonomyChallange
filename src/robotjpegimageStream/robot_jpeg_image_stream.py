@@ -28,7 +28,7 @@ class RobotImageDisplay:
             print('''
 Error: could not connect to robot {0} port {1}.
 Please check: Is the robot turned on and reachable via network and fw_sydney started?
-Re-raising exception ...
+Re-raising exception roboJpegStream...
 '''.format(self.ipaddr, self.port), file=sys.stderr)
             raise
 

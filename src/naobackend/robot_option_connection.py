@@ -293,7 +293,7 @@ class RobotOptionConnection:
             print('''
 Error: could not connect to robot {0} port_firmware {1} port_bridge {2}.
 Please check: Is the robot turned on and reachable via network and fw_sydney started?
-Re-raising exception ...
+Re-raising exception HHHHHHHHHHHHHHHHh...
 '''.format(ip_addr, port_firmware, port_bridge), file=sys.stderr)
             raise
 

@@ -28,7 +28,7 @@ class RobotImageReceiver:
             print(f'''
 Error: could not connect to robot {self.ipaddr} port {self.port}.
 Please check: Is the robot turned on and reachable via network and fw_sydney started?
-Re-raising exception ...
+Re-raising exception llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll...
 ''', file=sys.stderr)
             self.running = False
             raise
