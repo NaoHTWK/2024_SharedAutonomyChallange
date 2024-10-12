@@ -4,9 +4,9 @@ import sys
 from PIL import Image
 import threading
 
-import src.naoshow.SPLStandartMessage as SPL
-import src.naoshow.UDPReceiver as UDP
-import src.naoshow.CameraStream as CS
+import naoshow.SPLStandartMessage as SPL
+import naoshow.UDPReceiver as UDP
+import naoshow.CameraStream as CS
 
 class Gui(threading.Thread):
     def __init__(self):

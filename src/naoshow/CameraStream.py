@@ -4,7 +4,7 @@ from PIL import Image
 import pygame
 import time
 
-from src.naobackend.robot_jpeg_image_stream import RobotJpegImageStream
+from naobackend.robot_jpeg_image_stream import RobotJpegImageStream
 
 class CameraStream(threading.Thread):
     def __init__(self, running, fps, ip_addr):
