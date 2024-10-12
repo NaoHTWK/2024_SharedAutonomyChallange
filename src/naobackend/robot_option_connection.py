@@ -8,7 +8,7 @@ from enum import Enum
 from typing import Callable
 from abc import ABC, abstractmethod
 
-from src.naobackend.visualizer_datatype import *
+from naobackend.visualizer_datatype import *
 
 
 class RobotOptionType(Enum):

@@ -3,8 +3,8 @@ import time
 import pygame
 import pygame_gui
 
-from src.pingmanger.PingManger import PingManager
-from src.robotjpegimageStream.robot_jpeg_image_stream import RobotImageDisplay
+from pingmanger.PingManger import PingManager
+from robotjpegimageStream.robot_jpeg_image_stream import RobotImageDisplay
 
 
 class App:

@@ -1,7 +1,9 @@
+#!/usr/bin/env python3
+
 from app.app import *
-from src.joystickhandler.joystick_handler import *
-from src.walkcontrol.walk_control import *
-import src.naoshow.Gui as GUI
+from joystickhandler.joystick_handler import *
+from walkcontrol.walk_control import *
+import naoshow.Gui as GUI
 
 def main(joystick):
     #app = App(['10.0.13.17'])

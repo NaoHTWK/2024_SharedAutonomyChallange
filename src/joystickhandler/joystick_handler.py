@@ -1,7 +1,7 @@
 import pygame
 import pygame_gui
-from src.walkcontrol.walk_control import *
-from src.robotjpegimageStream.robot_jpeg_image_stream import *
+from walkcontrol.walk_control import *
+from robotjpegimageStream.robot_jpeg_image_stream import *
 
 
 class JoystickHandler:

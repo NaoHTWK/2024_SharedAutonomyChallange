@@ -1,4 +1,4 @@
-import src.naobackend.robot_option_connection as roptions
+import naobackend.robot_option_connection as roptions
 from enum import Enum
 import sys
 
