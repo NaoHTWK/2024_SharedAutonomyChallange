@@ -1,3 +1,7 @@
 __pycache__
 /Python-GUI/venv
 /Python-GUI/.idea
+.idea
+cmake-build-release
+cmake-build-debug
+sacbuild
