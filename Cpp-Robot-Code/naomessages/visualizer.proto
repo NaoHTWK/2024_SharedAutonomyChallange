@@ -1,0 +1,129 @@
+syntax = "proto3";
+package protobuf.visualizer;                                                       
+
+// This file contain all the elements that could be in a visualizer packet
+// and is later drawn by NaoControl.
+                                                                                   
+option java_package = "de.htwk_leipzig.naocontrol.backend.internal.protobuf.visualizer";                     
+option java_outer_classname = "VisualizerProtos";
+
+enum VisualizerTransactionType {
+    ABSOLUTE      = 0;
+    RELATIVE_HEAD = 1;
+    RELATIVE_BODY = 2;
+}
+
+enum VisualizerReplacement {
+    NO_REPLACE = 0;
+    REPLACE    = 1;
+}
+
+message Head {
+    float yaw   = 1;
+    float pitch = 2;
+}
+
+message Parameter {
+    string name        = 1;
+    repeated int32  intParams   = 2 [packed=true];
+    repeated float  floatParams = 3 [packed=true];
+    Color color        = 4;
+}
+
+message Color {
+    uint32 r = 1;
+    uint32 g = 2;
+    uint32 b = 3;
+    uint32 a = 4;
+}
+
+message Line2D {
+    Color  color      = 1;
+    uint32 fadingTime = 2;
+    float  x1         = 3;
+    float  y1         = 4;
+    float  x2         = 5;
+    float  y2         = 6;
+
+    enum LineType {
+	NORMAL = 0;
+	ARROW  = 1;
+    }
+    LineType type    = 7;
+}
+
+message Ellipsis2D {
+    Color  borderColor  = 1;
+    Color  fillColor    = 2;
+    uint32 fadingTime   = 3;
+    float  centerX      = 4;
+    float  centerY      = 5;
+    float  width        = 6;
+    float  height       = 7;
+    float  angle	 = 8; // rotation is in degrees
+}
+
+message Rectangle2D {
+    Color  borderColor  = 1;
+    Color  fillColor    = 2;
+    uint32 fadingTime   = 3;
+    float  upperLeftX   = 4;
+    float  upperLeftY   = 5;
+    float  width        = 6;
+    float  height       = 7;
+}
+
+message Arc2D {
+    Color     borderColor =  1;
+    Color     fillColor   =  2;
+    uint32    fadingTime  =  3;
+    float     centerX     =  4;
+    float     centerY     =  5;
+    float     width       =  6;
+    float     height      =  7;
+    float     startAngle  =  8;
+    float     arcAngle    =  9; // arcAngle is degrees
+    enum Arc2DType {
+        OPEN  = 0;
+        CHORD = 1;
+        PIE   = 2;
+    }
+    Arc2DType type        = 10;
+}
+
+message Text2D {
+    Color  color        = 1;
+    uint32 fadingTime   = 3;
+    float  x            = 4;
+    float  y            = 5;
+    float  size         = 6;
+    string text         = 7;
+}
+
+message Raster2D {
+    float  x             = 1;
+    float  y             = 2;
+    float  rotation      = 3;
+    float  scale         = 4;
+    uint32 width         = 5;
+    uint32 height        = 6;
+    Color  color         = 7;
+    uint32 fadingTime    = 8;
+    repeated uint32 data = 9;
+}
+
+message VisualizerTransaction {
+    VisualizerReplacement replacement         = 1;
+    VisualizerTransactionType transactionType = 2;
+    uint64      time       =  3;
+    string      subsystem  =  4;
+    repeated string      messages   =  5;
+    Head        head       =  6;
+    repeated Parameter   parameter  =  7;
+    repeated Line2D      lines      =  8;
+    repeated Ellipsis2D  ellipses   =  9;
+    repeated Rectangle2D rectangles = 10;
+    repeated Arc2D       arcs       = 11;
+    repeated Text2D      texts      = 12;
+    repeated Raster2D    raster     = 13;
+}

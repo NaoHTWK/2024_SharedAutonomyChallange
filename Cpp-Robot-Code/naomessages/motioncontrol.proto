@@ -1,0 +1,20 @@
+syntax = "proto3";
+package protobuf.motioncontrol;                                                       
+
+// This file contains the debugging functionality for agents. The send commands
+// for the runtime etc. are logged an can be visualized by NaoControl.
+                                                                                   
+option java_package = "de.htwk_leipzig.naocontrol.backend.internal.protobuf.motioncontrol";
+option java_outer_classname = "MotionControlProtos";                                  
+                                                                                   
+message ActionCommand {                                                                 
+    string  agent      = 1;
+    uint32  estTime    = 2;
+    uint32  minRuntime = 3;
+    uint32  maxRuntime = 4;
+    uint32  maxDelay   = 5;
+}                                                                                  
+
+message MotionControl {
+    repeated ActionCommand actionCommands = 1;
+}

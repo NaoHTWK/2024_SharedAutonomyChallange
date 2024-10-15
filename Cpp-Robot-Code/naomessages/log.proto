@@ -1,0 +1,38 @@
+syntax = "proto3";
+package protobuf.log;                                                       
+
+// This file contains the message format for the log messages which are saved
+// by the FlightRecorder. The contents (field logEntry) is explicit not 
+// specified and can be anything you like.
+                                                                                   
+option java_package = "de.htwk_leipzig.naocontrol.backend.internal.protobuf.log";
+option java_outer_classname = "LogProtos";                                  
+                                                                                   
+message LogEntry {                                                                  
+    uint64    timestamp = 1;
+    LogLevel  logLevel  = 2;
+    LogType   logType   = 3;
+    string    subsystem = 4;
+    uint32    size      = 5;
+    bytes     logEntry  = 6;
+    string    typeinfo  = 7;
+    LogSource src       = 8;
+}                                                                                  
+                                                                                   
+enum LogType {                                                               
+    TEXT     = 0;                                                        
+    PROTOBUF = 1;                                                        
+    BINARY   = 2;                                                        
+} 
+
+enum LogLevel {
+    INFO  = 0;
+    DEBUG = 1;
+    WARN  = 2;
+    ERROR = 3;
+}
+
+enum LogSource {
+    FIRMWARE = 0;
+    BRIDGE   = 1;
+}

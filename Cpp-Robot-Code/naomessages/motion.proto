@@ -1,0 +1,75 @@
+syntax = "proto3";
+package motionPlayerV2;
+
+message Joints {
+  repeated Joint joints = 1;
+}
+
+enum Joint {
+  HeadYaw = 0;
+  HeadPitch = 1;
+
+  LShoulderPitch = 2;
+  LShoulderRoll = 3;
+  LElbowYaw = 4;
+  LElbowRoll = 5;
+
+  LHipYawPitch = 6;
+
+  LHipRoll = 7;
+  LHipPitch = 8;
+  LKneePitch = 9;
+  LAnklePitch = 10;
+  LAnkleRoll = 11;
+
+  RHipRoll = 13;
+  RHipPitch = 14;
+  RKneePitch = 15;
+  RAnklePitch = 16;
+  RAnkleRoll = 17;
+
+  RShoulderPitch = 18;
+  RShoulderRoll = 19;
+  RElbowYaw = 20;
+  RElbowRoll = 21;
+
+  RWristYaw = 22;
+  RHand = 23;
+
+  LWristYaw = 24;
+  LHand = 25;
+}
+
+enum ReplaceMethod {
+  FORCE = 0;
+}
+
+message Motion {
+  repeated AngleFrame angle_frames = 1;
+  repeated StiffnessFrame stiffness_frames = 2;
+  repeated StabilizerFrame stabilizer_frames = 4;
+}
+
+message MotionToPlay {
+  Motion motion = 1;
+  ReplaceMethod method = 2;
+}
+
+
+message AngleFrame {
+  map<int32, float> values = 1;
+  int32 programID = 2;
+}
+
+message TempFrame {
+  map<int32, float> values = 1;
+}
+
+message StiffnessFrame {
+  map<int32, float> values = 1;
+  int32 programID = 2;
+}
+
+message StabilizerFrame {
+   float gain = 1;
+}

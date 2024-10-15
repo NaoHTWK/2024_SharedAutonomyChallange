@@ -1,0 +1,191 @@
+syntax = "proto3";
+package protobuf.worldmodel;
+
+// This file contains the description of our worldmodel which is send from
+// the firmware to infocast and from there to the world.
+
+option java_package = "de.htwk_leipzig.naocontrol.backend.internal.protobuf.worldmodel";
+option java_outer_classname = "WorldModelProtos";
+
+message Point2D {
+    float x = 1;
+    float y = 2;
+}
+
+message RelativeBall {
+    Point2D pos    = 1;
+    Point2D speed  = 2; // relative filtered speed
+    int64 lastSeen = 3; // time in us since we saw the ball the last time
+}
+
+message LocationInfo {
+    float x    = 1;
+    float y    = 2;
+    float a    = 3;
+    float qual = 4;
+}
+
+message Position {
+    float x = 1;
+    float y = 2;
+    float a = 3;
+}
+
+message Teamball {
+    Point2D pos  = 1;
+    float qual   = 2;
+    bool trusted = 3;
+}
+
+message Obstacle {
+    Point2D pos = 1;            // Relative position
+    float confindence = 2;      // Tracked Object pDetection
+    float ownTeamProb = 3;
+}
+
+
+message MoveBallOrder {
+    Point2D pos = 1;
+}
+
+message KeepGoalOrder {
+    bool allowedToMove = 1;
+}
+
+message WalkToPositionOrder {
+    Position pos = 1;
+    bool useA    = 2;
+    enum Mode {
+        MODE_USE_A = 0;
+        MODE_STRIKER = 1;
+        MODE_SUPPORTER = 2;
+        MODE_KEEP_A = 3;
+        MODE_FOCUS_DIRECTION = 4;
+    }
+    Mode mode    = 3;
+    repeated Point2D obstacles = 4;
+    enum HeadFocus {
+        FOCUS_NOTHING = 0;
+        FOCUS_LOC = 1;
+        FOCUS_BALL = 2;
+        FOCUS_BALL_SEARCH_LEFT = 3;
+        FOCUS_BALL_SEARCH_RIGHT = 4;
+        FOCUS_BALL_GOALIE = 5;
+        FOCUS_OBSTACLES = 6;
+    }
+    HeadFocus head_focus = 5;
+    bool precise = 6;
+}
+
+message WalkRelativeOrder {
+    Position pos = 1;
+}
+
+message MoveBallGoalOrder {
+    float y = 1;
+}
+
+message Order {
+    string name = 1;
+
+    oneof orders {
+        MoveBallOrder moveBallOrder = 2;
+        WalkToPositionOrder walkToPositionOrder = 3;
+        MoveBallGoalOrder moveBallGoalOrder = 4;
+        KeepGoalOrder keepGoalOrder = 5;
+        WalkRelativeOrder walkRelativeOrder = 6;
+    }
+}
+
+// We build our World Model based an this information
+message WorldModel {
+    uint32      pid   = 1; // Duplicate detection
+    uint64      time  = 2; // Duplicate detection
+    RelativeBall ball = 3; // Relative ball based on vision and tracking
+    LocationInfo pos  = 4; // Location we found via the localization
+    bool isFallen     = 5;
+    bool penalized    = 6;
+    repeated Obstacle obstacles = 7;
+}
+
+// We use this to identify the robot and show information in NaoControl
+message RobotMetaInfo {
+    string hostname       =  1;
+    sint32 battery        =  2;
+    int32  wifiStrength   =  3;
+    int32  cpuTemp        =  4;
+    int32  lanIp          =  5;
+    bytes  lanMac         =  6;
+    int32  wifiIp         =  7;
+    bytes  wifiMac        =  8;
+    float jointTemperatureMax = 9;
+    string jointTemperatureName = 10;
+}
+
+// Debuginformation in NaoControl
+message DebugData {
+    string agent                = 1; // What agent runs currently
+    Order order                 = 2; // What is our current order.
+    Teamball teamball           = 3;
+    uint32 whistleTimestamp     = 4;
+    CameraState stateLowerCam   = 5;
+    CameraState stateUpperCam   = 6;
+}
+
+enum CameraState {
+    OK              = 0;
+    DIRTY           = 1;
+    SAME_PICTURE    = 2;
+    WDG_TRIGGERED   = 3;
+    SCRAMBLED       = 4;
+}
+
+// This message is transfered from the Firmware -> Infocast
+message FirmwareInfo {
+    uint32     teamNumber           = 1;
+    uint32     playerIdx            = 2;
+    WorldModel worldmodel           = 3;
+    DebugData  debug                = 4;
+    uint32 msgBudget                = 5;
+    bool penalized                  = 6;
+    uint32 currentGcState           = 7;
+}
+
+message TeamCommMsg {
+    // Keep in sync with team_comm.h!!!
+    enum Type {
+        NONE = 0;
+        STRIKER = 1;
+        GOALIE = 2;
+        NEW_STRIKER = 3;
+        POSITION_UPDATE = 4;
+        OPPONENT_UPDATE = 5;
+        NEW_STRIKER_MOVE = 6;
+        SWITCH_TO_READY = 7;
+        SWITCH_TO_PLAY = 8;
+    }
+    Type type = 1;
+    float loc_quality = 2;
+    uint32 player_idx = 3;
+    bool is_fallen = 4;
+    Position pos = 5;
+    bool has_ball = 6;
+    uint64 ball_age_us = 7;
+    Point2D ball_pos = 8;
+    repeated Obstacle opponents = 9;
+    int64 sent_time = 10;
+    int64 last_ball_touch = 11;
+}
+
+message TeamStrategyDebug {
+    enum Role {GOALIE=0; COVER=1; SHADOW=2; MARK=3; COVER2=4; SHADOW2=5; STRIKER=6; INVALID=7;}
+    map<uint32, Role> playerToRole = 1;
+    map<uint32, Point2D> roleToLocation = 2; // See Role for mapping int -> Role
+}
+
+// This message is send as payload from Infocast in the SPL Standard Package
+message Infocast {
+    RobotMetaInfo meta  = 1;
+    WorldModel    world = 2;
+    DebugData     debug = 3;
+}

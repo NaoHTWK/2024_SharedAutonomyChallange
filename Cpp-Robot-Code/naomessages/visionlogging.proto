@@ -1,0 +1,244 @@
+syntax = "proto3";
+package protobuf.vision.log;                                                              
+
+// This file contain everything which is recognize by the vision and can be
+// reconstructed by NaoControl.
+                                                                                   
+option java_package = "de.htwk_leipzig.naocontrol.backend.internal.protobuf.visionlog";
+option java_outer_classname = "VisionLogProtos";  
+
+message LineSegment {
+    uint32 x     = 1;
+    uint32 y     = 2;
+    sint32 vx    = 3;
+    sint32 vy    = 4;
+    uint32 id    = 5;
+    uint32 linkX = 6;
+    uint32 linkY = 7;
+}
+
+message LineEdge {
+    float  px1	     = 1;
+    float  px2	     = 2;
+    float  py1	     = 3;
+    float  py2	     = 4;
+    float  nx	     = 5;
+    float  ny	     = 6;
+    float  d	     = 7;
+    float  x	     = 8;
+    float  y	     = 9;
+    uint32 id	     = 10;
+    uint32 matchCnt = 11;
+    bool straight   = 12;
+    bool valid      = 13;
+}
+
+message Line {
+    repeated LineEdge edges = 1;
+}
+
+message Ellipse {
+    float a	      =  1;
+    float b	      =  2;
+    float c	      =  3;
+    float d	      =  4;
+    float e	      =  5;
+    float f	      =  6;
+    float a1	      =  7;
+    float b1	      =  8;
+    float c1	      =  9;
+    float d1	      = 10;
+    float e1	      = 11;
+    float f1	      = 12;
+    float ta	      = 13;
+    float tb	      = 14;
+    float brennpunkt = 15;
+    bool  found      = 16;
+}
+
+message Point2D {
+    uint32 x = 1;
+    uint32 y = 2;
+}
+
+message Point2Df {
+    float x = 1;
+    float y = 2;
+}
+
+message Point3Df {
+    float x = 1;
+    float y = 2;
+    float z = 3;
+}
+
+message Color {
+    uint32 cy = 1;
+    uint32 cb = 2;
+    uint32 cr = 3;
+}
+
+message LineCross {
+    float px = 1;
+    float py = 2;
+    float vx = 3;
+    float vy = 4;
+}
+
+message YPR {
+    float yaw    = 1;
+    float pitch  = 2;
+    float roll   = 3;
+}
+
+message YawPitch {
+    float yaw    = 1;
+    float pitch  = 2;
+}
+
+message PitchRoll {
+    float pitch  = 1;
+    float roll   = 2;
+}
+
+message ObjectHypotheses {
+    uint32 x      = 1;
+    uint32 y	  = 2;
+    uint32 radius = 3;
+    float  prob   = 4;
+    bool   found  = 5;
+    float  rating = 6;
+}
+
+message GoalPost {
+    uint32 x      = 1;
+    uint32 y	  = 2;
+    uint32 radius = 3;
+    float  prob   = 4;
+}
+
+message BoundingBox {
+    Point2D a  = 1;
+    Point2D b  = 2;
+    float prob = 3;
+}
+
+message RobotBoundingBox {
+    BoundingBox bb      = 1;
+    float dist          = 2;
+    float angle         = 3;
+    float own_team_prob = 4;
+}
+
+message CenterCirclePoint {
+    uint32 x      = 1;
+    uint32 y	  = 2;
+    uint32 radius = 3;
+    float  prob   = 4;
+    enum CenterCirclePointSide {
+        LEFT    = 0;
+        CENTER  = 1;
+        RIGHT   = 2;
+        UNKNOWN = 3;
+    }
+    CenterCirclePointSide position = 5;
+}
+
+message LowerCamObstacleResult {
+    uint32 width  = 1;
+    uint32 height = 2;
+    repeated float obstacle = 3;
+}
+
+message CamPose {
+    float leg_height = 1;
+    YPR body_angles = 2;
+    YawPitch head_angles = 3;
+    enum CamID {
+        UPPER = 0;
+        LOWER = 1;
+    }
+    CamID cam_id = 4;
+    PitchRoll body_offset = 5;
+    PitchRoll head_offset = 6;
+    PitchRoll ellipse_angles = 7;
+}
+
+message TinyImage {
+    bytes y      = 1;
+    bytes u      = 2;
+    bytes v      = 3;
+    uint32 width  = 4;
+    uint32 height = 5;
+}
+
+message VisionFrame {
+    uint32           frameId     = 1;
+    uint32	     width       = 2;
+    uint32	     height      = 3;
+    Color            fieldColor  = 4;
+    repeated uint32 fieldBorderY = 5;
+    repeated LineSegment lineSegments = 6;
+    repeated Line    lines          = 7;
+    Ellipse          ellipse        = 8;
+    ObjectHypotheses ball           = 9;
+    repeated LineCross lineCrosses  = 10;
+    Point2D          feet           = 11;
+    int64            time           = 12;
+    ObjectHypotheses penaltySpot    = 13;
+    repeated ObjectHypotheses feets = 14;
+    LowerCamObstacleResult obstacle = 15;
+    CamPose         camPose         = 16;
+    TinyImage       tinyImage       = 17;
+    repeated ObjectHypotheses objHypotheses = 18;
+    repeated GoalPost goalpost      = 19;
+    repeated CenterCirclePoint centercirclepoint = 20;
+    repeated RobotBoundingBox robots = 21;
+}
+
+message WalkRequest {
+    float dx = 1;
+    float dy = 2;
+    float da = 3;
+    enum Shoot {
+        NONE = 0;
+        LEFT = 1;
+        RIGHT = 2;
+    }
+    Shoot shoot = 4;
+}
+
+message Foot {
+    Point3Df p = 1;
+    float alpha = 2;
+    float beta = 3;
+}
+
+message Feet {
+    Foot left = 1;
+    Foot right = 2;
+    float gamma = 3;
+}
+
+message SensorFrame {
+    int64     time       = 1;  // µs
+    float     head_pitch = 2;
+    float     head_yaw   = 3;
+    float     body_pitch = 4;
+    float     body_roll  = 5;
+    Point3Df  motion_vec = 6;
+    YPR       gyro       = 7;
+    Point3Df  accel      = 8;
+    float     leg_height = 9;
+    float step_height = 10;
+    WalkRequest walk_request = 11;
+    Feet feet = 12;
+}
+
+message RawImage {
+    VisionFrame vision = 1;
+    bytes image        = 2;
+    int64 time_us      = 3;
+    int32 cam_id       = 4;
+    string reason      = 5;
+}

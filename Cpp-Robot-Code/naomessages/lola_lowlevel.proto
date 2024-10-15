@@ -1,0 +1,127 @@
+syntax = "proto3";
+package protobuf.lola;
+
+option java_package = "de.htwk_leipzig.naocontrol.backend.internal.protobuf.lola";
+option java_outer_classname = "LolaProtos";
+
+message JointRead {
+    float angle       = 1;
+    float current     = 2;
+    float temperature = 3;
+    float stiffness   = 4;
+    int32 status      = 5;
+}
+
+message JointWrite {
+    float angle     = 1;
+    float stiffness = 2;
+}
+
+message Joint {
+    JointRead read   = 1;
+    JointWrite write = 2;
+}
+
+message YPRJoint {
+    Joint yaw   = 1;
+    Joint pitch = 2;
+    Joint roll  = 3;
+}
+
+message YPJoint {
+    Joint yaw   = 1;
+    Joint pitch = 2;
+}
+
+message YRJoint {
+    Joint yaw   = 1;
+    Joint roll  = 2;
+}
+
+message PRJoint {
+    Joint pitch = 1;
+    Joint roll  = 2;
+}
+
+message YPR {
+    float yaw   = 1;
+    float pitch = 2;
+    float roll  = 3;
+}
+
+message Point3D {
+    float x = 1;
+    float y = 2;
+    float z = 3;
+}
+
+message WalkRequest {
+    enum Shoot {
+        NONE = 0;
+        LEFT = 1;
+        RIGHT = 2;
+    }
+
+    float dx    = 1;
+    float dy    = 2;
+    float da    = 3;
+    Shoot shoot = 4;
+    float foot_v_angle = 5;
+    bool unsafe = 6;
+}
+
+message HeadRequest {
+    JointWrite yaw   = 1;
+    JointWrite pitch = 2;
+}
+
+message IMU {
+    YPR     gyro  = 1;
+    Point3D accel = 2;
+}
+
+message BodySide {
+    PRJoint  shoulder   = 1;
+    YRJoint  elbow      = 2;
+    PRJoint  hip        = 3;
+    Joint    knee_pitch = 4;
+    PRJoint  ankle      = 5;
+    Joint    wrist_yaw  = 6;
+    Joint    hand       = 7;
+}
+
+message RobotJoints {
+    YPJoint  head     = 1;
+    Joint    hip_yaw  = 2;
+    BodySide left     = 3;
+    BodySide right    = 4;
+}
+
+message Battery {
+    float current = 1;
+    float temp    = 2;
+    float status  = 3;
+    float charge  = 4;
+}
+
+message FootFSR {
+    float fl = 1;
+    float fr = 2;
+    float rl = 3;
+    float rr = 4;
+}
+
+message FSR {
+    FootFSR left  = 1;
+    FootFSR right = 2;
+}
+
+message LolaStatus {
+    int64       timestamp   = 1;
+    WalkRequest walkrequest = 2;
+    HeadRequest headrequest = 3;
+    RobotJoints joints      = 4;
+    Battery     battery     = 5;
+    IMU         imu         = 6;
+    FSR         fsr         = 7;
+}

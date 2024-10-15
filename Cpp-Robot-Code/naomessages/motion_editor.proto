@@ -1,0 +1,13 @@
+syntax = "proto3";
+package motionEditor;
+
+import "google/protobuf/empty.proto";
+import "motion.proto";
+
+service MotionEditor {
+    rpc UnlockJoints(motionPlayerV2.Joints) returns (google.protobuf.Empty); //UNLOCK
+    rpc LockJoints(motionPlayerV2.StiffnessFrame) returns (motionPlayerV2.AngleFrame); //Returns LOCKED-ANGLES
+    rpc PlayFrames(motionPlayerV2.MotionToPlay) returns (google.protobuf.Empty);
+    rpc GetTemp(motionPlayerV2.Joints) returns (motionPlayerV2.TempFrame);
+    rpc Exit(google.protobuf.Empty) returns (google.protobuf.Empty);
+}
